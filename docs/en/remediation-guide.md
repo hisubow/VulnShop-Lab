@@ -19,3 +19,12 @@
 | VULN-05 | Use password hashing such as Werkzeug password hashing |
 | VULN-06 | Check object ownership or role |
 | VULN-07 | Enforce role-based authorization |
+
+## CSRF Protection
+
+For state-changing requests such as profile updates, password changes, or account settings:
+
+- Require a CSRF token for form submissions.
+- Store the token server-side or bind it to the user session.
+- Reject missing or invalid tokens with a clear authorization failure.
+- Prefer framework-supported CSRF protection for real applications.

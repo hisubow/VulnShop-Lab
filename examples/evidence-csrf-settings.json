@@ -1,0 +1,11 @@
+{
+  "title": "Missing CSRF Protection on Account Settings",
+  "severity": "Medium",
+  "endpoint": "/settings",
+  "affected_role": "authenticated user",
+  "vulnerable_behavior": "The vulnerable app accepts a state-changing email update request without requiring a CSRF token.",
+  "secure_behavior": "The secure app rejects missing or invalid CSRF tokens with 403 Forbidden.",
+  "root_cause": "The vulnerable implementation trusts authenticated POST requests but does not verify request intent with a CSRF token.",
+  "remediation": "Add per-session CSRF tokens to state-changing forms and validate them server-side before processing updates.",
+  "retest_result": "The secure app requires a valid CSRF token before updating account settings."
+}

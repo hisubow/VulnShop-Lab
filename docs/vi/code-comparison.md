@@ -52,3 +52,30 @@ Lưu password dạng plaintext.
 ### Secure idea
 
 Dùng password hash và kiểm tra bằng `check_password_hash`.
+
+---
+
+## VULN-08 - CSRF Settings Update
+
+### Pattern vulnerable
+
+Bản vulnerable chấp nhận request `POST /settings` thay đổi trạng thái nhưng không kiểm tra CSRF token.
+
+```python
+email = request.form.get("email", "")
+conn.execute("UPDATE users SET email = ? WHERE id = ?", (email, session["user_id"]))
+```
+
+### Pattern secure
+
+Bản secure yêu cầu token được lưu trong session và gửi kèm trong form.
+
+```python
+token = request.form.get("csrf_token", "")
+if not token or token != session.get("csrf_token"):
+    abort(403)
+```
+
+### Bài học
+
+Các hành động thay đổi trạng thái nên có kiểm tra CSRF ở phía server, ngay cả khi user đã đăng nhập.

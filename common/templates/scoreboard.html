@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <span class="badge {{ badge_class }}">Challenge Mode</span>
+  <h1>Guided Challenge Scoreboard</h1>
+  <p>Track completed learning tasks during a local lab session. This is not a real CTF scoreboard; it is a lightweight progress tracker for self-study.</p>
+  <div class="score-box">
+    <strong>{{ score }}</strong> / {{ max_score }} points
+    <span>{{ completed_count }} / {{ total_count }} challenges completed</span>
+  </div>
+</section>
+<form method="post" class="card">
+  <h2>Challenges</h2>
+  {% for c in challenges %}
+  <label class="challenge-item">
+    <input type="checkbox" name="completed" value="{{ c.id }}" {% if c.id in completed %}checked{% endif %}>
+    <span><strong>{{ c.id }} — {{ c.title }}</strong><br><small>{{ c.description }} · {{ c.points }} pts</small></span>
+  </label>
+  {% endfor %}
+  <button type="submit">Save Progress</button>
+</form>
+<div class="card">
+  <h2>How to use this</h2>
+  <ol>
+    <li>Try the challenge on the vulnerable app.</li>
+    <li>Repeat the same action on the secure app.</li>
+    <li>Collect evidence and tick the challenge when you can explain the difference.</li>
+  </ol>
+</div>
+{% endblock %}

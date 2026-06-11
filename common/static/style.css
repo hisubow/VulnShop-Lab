@@ -17,3 +17,8 @@ button, .button { background: #2563eb; color: white; border: none; border-radius
 .notice { padding: 14px 16px; border-radius: 12px; background: #fff7ed; color: #9a3412; border: 1px solid #fed7aa; }
 pre { background: #0f172a; color: #e5e7eb; padding: 16px; border-radius: 12px; overflow-x: auto; }
 .footer { color: #667085; margin-top: 40px; font-size: 14px; }
+.score-box { display: flex; align-items: center; gap: 16px; margin-top: 16px; padding: 16px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 14px; }
+.score-box strong { font-size: 32px; color: #1d4ed8; }
+.challenge-item { display: flex; gap: 12px; align-items: flex-start; padding: 12px; border: 1px solid #e5e7eb; border-radius: 12px; margin: 10px 0; }
+.challenge-item input { width: auto; margin-top: 4px; }
+.challenge-item small { color: #667085; }

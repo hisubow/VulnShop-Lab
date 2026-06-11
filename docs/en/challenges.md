@@ -1,6 +1,6 @@
 # Challenge Mode - English
 
-Challenge Mode helps learners practice actively instead of only reading solutions.
+Challenge Mode helps learners practice actively instead of only reading solutions. Use the `/scoreboard` page to track your progress during a local session.
 
 ## C01 - Missing Admin Authorization
 
@@ -18,16 +18,15 @@ Expected observation:
 - The vulnerable app allows a normal user to access admin functionality.
 - The secure app returns `403 Forbidden`.
 
-## C02 - Profile IDOR
+## C02 - Login SQL Injection
 
-**Goal:** Check whether a user can view another user's profile.
+**Goal:** Compare unsafe SQL query construction with parameterized login handling.
 
 Hints:
 
-1. Log in as `alice`.
-2. Open `/profile`.
-3. Try changing the `id` query parameter.
-4. Compare the behavior with the secure app.
+1. Review `vulnerable-app/app.py` and find the login query.
+2. Compare it with `secure-app/app.py`.
+3. Use the behavioral tests as evidence that the vulnerable and secure versions behave differently.
 
 ## C03 - Search Input Handling
 
@@ -43,24 +42,36 @@ Learning note:
 
 - When user input is rendered inside normal page text, unsafe output may become reflected XSS.
 - When the same input is rendered inside an HTML attribute such as `value="..."`, unsafe output may become attribute injection.
-- This project intentionally demonstrates that context matters: the right fix is not only filtering characters, but using context-aware escaping and avoiding `safe` on user input.
+- Context matters: the right fix is context-aware escaping and avoiding `safe` on user input.
 
-## C04 - Feedback Rendering
+## C04 - Profile IDOR
 
-**Goal:** Check how feedback data is stored and rendered.
-
-Hints:
-
-1. Submit normal feedback.
-2. Submit feedback containing simple HTML characters.
-3. Compare how both apps render the content.
-
-## C05 - Weak Password Storage
-
-**Goal:** Understand why insecure password storage is a serious issue.
+**Goal:** Check whether a user can view another user's profile.
 
 Hints:
 
-1. Open the admin panel in the vulnerable app.
-2. Read `vulnerable-app/app.py`.
-3. Compare it with `secure-app/app.py`.
+1. Log in as `alice`.
+2. Open `/profile`.
+3. Try changing the `id` query parameter.
+4. Compare the behavior with the secure app.
+
+## C05 - CSRF Settings Update
+
+**Goal:** Understand why state-changing requests should require CSRF protection.
+
+Hints:
+
+1. Log in as `alice`.
+2. Open `/settings` in both apps.
+3. Compare the form markup and server-side logic.
+4. Observe that the secure app requires a CSRF token before updating the email value.
+
+## C06 - Evidence Report
+
+**Goal:** Generate a Markdown finding from structured evidence.
+
+Hints:
+
+1. Open one file in `examples/`.
+2. Run the report generator.
+3. Compare the generated report with `reports/sample-pentest-report.md`.

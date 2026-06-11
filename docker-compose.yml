@@ -8,6 +8,8 @@ services:
       - .env
     ports:
       - "5000:5000"
+    networks:
+      - vulnshop_vulnerable_net
     restart: unless-stopped
 
   secure-app:
@@ -19,4 +21,14 @@ services:
       - .env
     ports:
       - "5001:5000"
+    networks:
+      - vulnshop_secure_net
     restart: unless-stopped
+
+networks:
+  vulnshop_vulnerable_net:
+    driver: bridge
+    internal: true
+  vulnshop_secure_net:
+    driver: bridge
+    internal: true

@@ -19,3 +19,12 @@
 | VULN-05 | Dùng hash như Werkzeug password hashing |
 | VULN-06 | Kiểm tra object ownership hoặc role |
 | VULN-07 | Enforce role-based authorization |
+
+## CSRF Protection
+
+Với các request thay đổi trạng thái như cập nhật profile, đổi password hoặc chỉnh account settings:
+
+- Yêu cầu CSRF token cho form submission.
+- Lưu token phía server hoặc gắn với session của user.
+- Từ chối request thiếu token hoặc token không hợp lệ.
+- Với ứng dụng thật, nên dùng cơ chế CSRF protection có sẵn từ framework.

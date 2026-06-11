@@ -85,3 +85,32 @@ def test_secure_search_escapes_xss_payload(monkeypatch, tmp_path):
     assert resp.status_code == 200
     assert payload.encode() not in resp.data
     assert b"&#34;" in resp.data or b"&quot;" in resp.data
+
+
+def test_vulnerable_settings_allows_state_change_without_csrf(monkeypatch, tmp_path):
+    monkeypatch.setenv("VULNSHOP_DATABASE", str(tmp_path / "vuln-csrf.db"))
+    app = load_app(ROOT / "vulnerable-app" / "app.py", "vuln_app_csrf_test")
+    client = app.test_client()
+    client.post("/login", data={"username": "alice", "password": "alice123"})
+    resp = client.post("/settings", data={"email": "changed@vulnshop.local"}, follow_redirects=True)
+    assert resp.status_code == 200
+    assert b"changed@vulnshop.local" in resp.data
+
+
+def test_secure_settings_blocks_missing_csrf_token(monkeypatch, tmp_path):
+    monkeypatch.setenv("VULNSHOP_DATABASE", str(tmp_path / "secure-csrf.db"))
+    app = load_app(ROOT / "secure-app" / "app.py", "secure_app_csrf_test")
+    client = app.test_client()
+    client.post("/login", data={"username": "alice", "password": "alice123"})
+    resp = client.post("/settings", data={"email": "changed@vulnshop.local"})
+    assert resp.status_code == 403
+
+
+def test_scoreboard_tracks_progress_in_session(monkeypatch, tmp_path):
+    monkeypatch.setenv("VULNSHOP_DATABASE", str(tmp_path / "scoreboard.db"))
+    app = load_app(ROOT / "secure-app" / "app.py", "secure_app_scoreboard_test")
+    client = app.test_client()
+    resp = client.post("/scoreboard", data={"completed": ["C01", "C02"]}, follow_redirects=True)
+    assert resp.status_code == 200
+    assert b"40" in resp.data
+    assert b"2 / 6 challenges completed" in resp.data

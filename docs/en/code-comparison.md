@@ -52,3 +52,30 @@ Passwords are stored in plaintext.
 ### Secure idea
 
 Passwords are hashed and verified with `check_password_hash`.
+
+---
+
+## VULN-08 - CSRF Settings Update
+
+### Vulnerable pattern
+
+The vulnerable app accepts a state-changing `POST /settings` request without verifying a CSRF token.
+
+```python
+email = request.form.get("email", "")
+conn.execute("UPDATE users SET email = ? WHERE id = ?", (email, session["user_id"]))
+```
+
+### Secure pattern
+
+The secure app requires a token stored in the session and submitted with the form.
+
+```python
+token = request.form.get("csrf_token", "")
+if not token or token != session.get("csrf_token"):
+    abort(403)
+```
+
+### Lesson
+
+State-changing actions should include server-side CSRF validation, even when the user is already authenticated.

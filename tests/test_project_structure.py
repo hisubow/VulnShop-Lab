@@ -19,6 +19,11 @@ def test_key_files_exist():
         "docs/vi/challenges.md",
         "docs/en/challenges.md",
         "docs/release-notes.md",
+        "docs/en/writeups/admin-authorization.md",
+        "docs/en/writeups/sqli-login.md",
+        "docs/vi/writeups/admin-authorization.md",
+        "docs/vi/writeups/sqli-login.md",
+        "examples/evidence-csrf-settings.json",
     ]
     for rel in required:
         assert (ROOT / rel).exists(), rel

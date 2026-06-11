@@ -11,6 +11,22 @@ app.secret_key = os.getenv("VULNSHOP_SECRET_KEY", "dev-secret")
 DB_PATH = os.getenv("VULNSHOP_DATABASE", "/app/instance/vulnshop.db")
 
 
+CHALLENGES = [
+    {"id": "C01", "title": "Admin Authorization", "description": "Compare normal-user access to /admin.", "points": 20},
+    {"id": "C02", "title": "Login SQL Injection", "description": "Compare unsafe login handling with parameterized login.", "points": 20},
+    {"id": "C03", "title": "Search XSS Context", "description": "Compare raw reflection with escaped output.", "points": 15},
+    {"id": "C04", "title": "Profile IDOR", "description": "Compare user-controlled profile IDs with authorization checks.", "points": 15},
+    {"id": "C05", "title": "CSRF Settings Update", "description": "Compare state-changing requests without and with CSRF protection.", "points": 15},
+    {"id": "C06", "title": "Evidence Report", "description": "Generate a Markdown report from structured evidence.", "points": 15},
+]
+
+
+def normalize_completed(values):
+    valid = {c["id"] for c in CHALLENGES}
+    return sorted(v for v in values if v in valid)
+
+
+
 def get_db():
     os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
@@ -20,17 +36,17 @@ def get_db():
 def init_db():
     conn = get_db()
     cur = conn.cursor()
-    cur.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT, password TEXT, role TEXT)")
+    cur.execute("DROP TABLE IF EXISTS users")
+    cur.execute("DROP TABLE IF EXISTS products")
+    cur.execute("DROP TABLE IF EXISTS feedback")
+    cur.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT, password TEXT, role TEXT, email TEXT)")
     cur.execute("CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY, name TEXT, price REAL)")
     cur.execute("CREATE TABLE IF NOT EXISTS feedback (id INTEGER PRIMARY KEY, username TEXT, message TEXT)")
-    cur.execute("DELETE FROM users")
-    cur.execute("DELETE FROM products")
-    cur.execute("DELETE FROM feedback")
     # INTENTIONAL VULNERABILITY: plaintext passwords for VULN-05.
-    cur.executemany("INSERT INTO users VALUES (?, ?, ?, ?)", [
-        (1, "admin", "admin123", "admin"),
-        (2, "alice", "alice123", "user"),
-        (3, "bob", "bob123", "user"),
+    cur.executemany("INSERT INTO users VALUES (?, ?, ?, ?, ?)", [
+        (1, "admin", "admin123", "admin", "admin@vulnshop.local"),
+        (2, "alice", "alice123", "user", "alice@vulnshop.local"),
+        (3, "bob", "bob123", "user", "bob@vulnshop.local"),
     ])
     cur.executemany("INSERT INTO products VALUES (?, ?, ?)", [
         (1, "Mechanical Keyboard", 59.0),
@@ -126,6 +142,44 @@ def profile():
     conn.close()
     return render_template("profile.html", user=user)
 
+
+
+@app.route("/settings", methods=["GET", "POST"])
+def settings():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    conn = get_db()
+    current = conn.execute("SELECT email FROM users WHERE id = ?", (session["user_id"],)).fetchone()
+    current_email = current[0] if current else ""
+    if request.method == "POST":
+        email = request.form.get("email", "")
+        # INTENTIONAL VULNERABILITY: no CSRF token validation for VULN-08.
+        conn.execute("UPDATE users SET email = ? WHERE id = ?", (email, session["user_id"]))
+        conn.commit()
+        current_email = email
+        flash("Email updated without CSRF validation in the vulnerable lab version.")
+    conn.close()
+    return render_template("settings.html", current_email=current_email, csrf_token=None)
+
+
+@app.route("/scoreboard", methods=["GET", "POST"])
+def scoreboard():
+    if request.method == "POST":
+        session["completed_challenges"] = normalize_completed(request.form.getlist("completed"))
+        return redirect(url_for("scoreboard"))
+    completed = session.get("completed_challenges", [])
+    score = sum(c["points"] for c in CHALLENGES if c["id"] in completed)
+    max_score = sum(c["points"] for c in CHALLENGES)
+    return render_template(
+        "scoreboard.html",
+        badge_class="badge-danger",
+        challenges=CHALLENGES,
+        completed=completed,
+        completed_count=len(completed),
+        total_count=len(CHALLENGES),
+        score=score,
+        max_score=max_score,
+    )
 
 @app.route("/admin")
 def admin():

@@ -36,8 +36,10 @@ Run Lab → Explore → Challenge → Collect Evidence → Compare Fix → Gener
 - Evidence checklist for pentest-style documentation.
 - Code comparison between insecure and secure implementations.
 - Automated Markdown report generator with JSON validation.
+- Session-based Challenge Scoreboard for self-study progress tracking.
+- Docker Compose network isolation for vulnerable and secure services.
 - Sample evidence JSON files for multiple vulnerability types.
-- Behavioral tests for admin access control, SQL injection, XSS reflection, and report generation.
+- Behavioral tests for admin access control, SQL injection, XSS reflection, CSRF protection, scoreboard behavior, Docker Compose network isolation, and report generation.
 - Bilingual documentation in English and Vietnamese.
 
 ## Covered Vulnerabilities
@@ -50,7 +52,8 @@ Run Lab → Explore → Challenge → Collect Evidence → Compare Fix → Gener
 | VULN-04 | Stored XSS | Unsafe stored user content rendering |
 | VULN-05 | Weak Password Storage | Insecure credential handling |
 | VULN-06 | IDOR in Profile Page | Missing object-level authorization |
-| VULN-07 | Missing Admin Authorization | Broken access control |
+| VULN-07 | Thiếu kiểm tra quyền Admin | Broken access control |
+| VULN-08 | Thiếu CSRF Protection | Thiếu xác thực ý định request |
 
 > These vulnerabilities are intentionally implemented for local educational use only. Do not deploy the vulnerable app to the public Internet.
 
@@ -129,6 +132,7 @@ Other sample evidence files:
 examples/evidence-sqli-login.json
 examples/evidence-reflected-xss.json
 examples/evidence-idor-profile.json
+examples/evidence-csrf-settings.json
 ```
 
 The report generator validates required fields before writing the Markdown report.
@@ -194,6 +198,8 @@ VulnShop-Lab/
 | `docs/en/code-comparison.md` | Vulnerable vs secure code comparison |
 | `docs/en/vulnerability-list.md` | Vulnerability reference |
 | `docs/en/remediation-guide.md` | Fixing and prevention guidance |
+| `docs/en/writeups/admin-authorization.md` | Complete write-up for admin authorization |
+| `docs/en/writeups/sqli-login.md` | Complete write-up for login SQL injection |
 | `docs/release-notes.md` | Release notes |
 
 ## Ethical Use
@@ -231,21 +237,24 @@ Run Lab → Explore → Challenge → Collect Evidence → Compare Fix → Gener
 - Evidence Checklist để ghi nhận bằng chứng theo kiểu pentest.
 - Code Comparison để so sánh implementation sai và implementation đã fix.
 - Report Generator sinh báo cáo Markdown từ evidence JSON và có validate field bắt buộc.
+- Challenge Scoreboard lưu tiến độ học trong session.
+- Docker Compose có network isolation cho hai service.
 - Nhiều evidence JSON mẫu cho các nhóm lỗ hổng khác nhau.
-- Behavioral tests cho admin access control, SQL injection, XSS reflection và report generator.
+- Behavioral tests cho admin access control, SQL injection, XSS reflection, CSRF protection, scoreboard, Docker Compose network isolation và report generator.
 - Tài liệu song ngữ tiếng Việt và tiếng Anh.
 
 ## Lỗ hổng được mô phỏng
 
 | ID | Lỗ hổng | Ý nghĩa học tập |
 |---|---|---|
-| VULN-01 | SQL Injection in Login | Truy vấn SQL không an toàn |
-| VULN-02 | SQL Injection in Search | Xử lý input không an toàn |
+| VULN-01 | SQL Injection ở Login | Truy vấn SQL không an toàn |
+| VULN-02 | SQL Injection ở Search | Xử lý input không an toàn |
 | VULN-03 | Reflected XSS / Attribute Injection | Render output sai theo context HTML |
 | VULN-04 | Stored XSS | Lưu và hiển thị nội dung user nhập không an toàn |
 | VULN-05 | Weak Password Storage | Lưu trữ mật khẩu yếu |
-| VULN-06 | IDOR in Profile Page | Thiếu kiểm tra quyền truy cập object |
-| VULN-07 | Missing Admin Authorization | Broken access control |
+| VULN-06 | IDOR ở Profile Page | Thiếu kiểm tra quyền truy cập object |
+| VULN-07 | Thiếu kiểm tra quyền Admin | Broken access control |
+| VULN-08 | Thiếu CSRF Protection | Thiếu xác thực ý định request |
 
 > Các lỗi này được tạo có chủ đích để học trong local lab. Không deploy vulnerable app ra Internet.
 
@@ -324,6 +333,7 @@ Các evidence JSON mẫu khác:
 examples/evidence-sqli-login.json
 examples/evidence-reflected-xss.json
 examples/evidence-idor-profile.json
+examples/evidence-csrf-settings.json
 ```
 
 Report generator sẽ kiểm tra các field bắt buộc trước khi tạo file Markdown.
