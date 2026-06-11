@@ -1,0 +1,17 @@
+{
+  "title": "Missing Admin Authorization",
+  "vulnerability_id": "VULN-07",
+  "severity": "High",
+  "endpoint": "/admin",
+  "test_account": "alice / user role",
+  "vulnerable_url": "http://localhost:5000/admin",
+  "secure_url": "http://localhost:5001/admin",
+  "status_code": "5000: 200 OK, 5001: 403 Forbidden",
+  "vulnerable_behavior": "A normal user can access the admin panel in the vulnerable app after logging in.",
+  "secure_behavior": "The secure app blocks the same normal user from accessing the admin panel and returns 403 Forbidden.",
+  "evidence_note": "Compare the /admin route behavior after logging in as alice on both apps.",
+  "root_cause": "The vulnerable app only checks whether a user is logged in, but does not check whether the user has the admin role.",
+  "impact": "A normal user may access administrative functionality or sensitive user information.",
+  "remediation": "Enforce role-based authorization on the backend before rendering admin functionality.",
+  "retest_notes": "Retest confirmed that the secure app blocks non-admin users."
+}

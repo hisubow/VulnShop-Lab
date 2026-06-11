@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <h1>Admin Panel</h1>
+  <p>This page is used to compare authorization behavior.</p>
+</div>
+<table class="table">
+  <thead><tr><th>ID</th><th>Username</th><th>Role</th>{% if show_passwords %}<th>Password Storage</th>{% endif %}</tr></thead>
+  <tbody>
+  {% for u in users %}
+  <tr>
+    <td>{{ u[0] }}</td><td>{{ u[1] }}</td><td>{{ u[2] }}</td>{% if show_passwords %}<td>{{ u[3] }}</td>{% endif %}
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

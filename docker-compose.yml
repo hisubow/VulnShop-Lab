@@ -1,0 +1,18 @@
+services:
+  vulnerable-app:
+    build: ./vulnerable-app
+    container_name: vulnshop-vulnerable
+    env_file:
+      - .env
+    ports:
+      - "5000:5000"
+    restart: unless-stopped
+
+  secure-app:
+    build: ./secure-app
+    container_name: vulnshop-secure
+    env_file:
+      - .env
+    ports:
+      - "5001:5000"
+    restart: unless-stopped
