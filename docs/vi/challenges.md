@@ -39,6 +39,12 @@ Gợi ý:
 2. Thử input đặc biệt trong môi trường local lab.
 3. So sánh cách vulnerable app và secure app trả kết quả.
 
+Ghi chú học tập:
+
+- Khi input của user được render trong text bình thường của trang, output không an toàn có thể trở thành reflected XSS.
+- Khi input đó được render trong HTML attribute như `value="..."`, output không an toàn có thể trở thành attribute injection.
+- Project này cố tình giữ case đó để người học thấy rằng context render rất quan trọng. Cách sửa đúng là dùng context-aware escaping và không dùng `safe` cho dữ liệu do user nhập.
+
 ## C04 - Feedback Rendering
 
 **Mục tiêu:** Kiểm tra dữ liệu feedback được lưu và hiển thị lại như thế nào.

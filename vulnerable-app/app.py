@@ -1,8 +1,12 @@
 import os
 import sqlite3
+from pathlib import Path
 from flask import Flask, render_template, request, redirect, session, url_for, flash
 
-app = Flask(__name__)
+BASE_DIR = Path(__file__).resolve().parent
+COMMON_DIR = Path(os.getenv("VULNSHOP_COMMON_DIR", str(BASE_DIR.parent / "common")))
+
+app = Flask(__name__, template_folder=str(COMMON_DIR / "templates"), static_folder=str(COMMON_DIR / "static"))
 app.secret_key = os.getenv("VULNSHOP_SECRET_KEY", "dev-secret")
 DB_PATH = os.getenv("VULNSHOP_DATABASE", "/app/instance/vulnshop.db")
 
@@ -38,12 +42,6 @@ def init_db():
     conn.commit()
     conn.close()
 
-
-@app.before_request
-def setup_once():
-    if not getattr(app, "db_ready", False):
-        init_db()
-        app.db_ready = True
 
 
 @app.route("/")
@@ -140,6 +138,10 @@ def admin():
     conn.close()
     return render_template("admin.html", users=users, show_passwords=True)
 
+
+# Initialize database once when the application process starts.
+# This avoids per-request initialization and keeps the lab deterministic.
+init_db()
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

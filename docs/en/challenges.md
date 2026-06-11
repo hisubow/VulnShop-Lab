@@ -39,6 +39,12 @@ Hints:
 2. Try special input in the local lab.
 3. Compare vulnerable and secure behavior.
 
+Learning note:
+
+- When user input is rendered inside normal page text, unsafe output may become reflected XSS.
+- When the same input is rendered inside an HTML attribute such as `value="..."`, unsafe output may become attribute injection.
+- This project intentionally demonstrates that context matters: the right fix is not only filtering characters, but using context-aware escaping and avoiding `safe` on user input.
+
 ## C04 - Feedback Rendering
 
 **Goal:** Check how feedback data is stored and rendered.

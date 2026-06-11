@@ -1,0 +1,17 @@
+{
+  "title": "IDOR in Profile Page",
+  "vulnerability_id": "VULN-06",
+  "severity": "Medium",
+  "endpoint": "/profile?id=<id>",
+  "test_account": "alice / user role",
+  "vulnerable_url": "http://localhost:5000/profile?id=3",
+  "secure_url": "http://localhost:5001/profile?id=3",
+  "status_code": "5000: 200 OK, 5001: 403 Forbidden",
+  "vulnerable_behavior": "A normal user can modify the profile id query parameter and view another user's profile data in the vulnerable app.",
+  "secure_behavior": "The secure app blocks normal users from accessing another user's profile unless they are an admin.",
+  "evidence_note": "Log in as alice and compare /profile?id=3 in both applications.",
+  "root_cause": "The vulnerable app trusts the user-controlled id parameter without checking object-level authorization.",
+  "impact": "A user could view data belonging to another account if similar logic existed in a real application.",
+  "remediation": "Enforce object-level access checks on the server side before returning profile data.",
+  "retest_notes": "Retest confirmed that the secure app returns 403 Forbidden for unauthorized profile access."
+}

@@ -1,0 +1,17 @@
+{
+  "title": "Reflected XSS / Attribute Injection in Search",
+  "vulnerability_id": "VULN-03",
+  "severity": "Medium",
+  "endpoint": "/search",
+  "test_account": "guest or authenticated user",
+  "vulnerable_url": "http://localhost:5000/search?q=<payload>",
+  "secure_url": "http://localhost:5001/search?q=<payload>",
+  "status_code": "5000: 200 OK with unsafe reflection, 5001: 200 OK with escaped output",
+  "vulnerable_behavior": "The vulnerable app reflects the search query using unsafe rendering. Depending on context, this can appear as text-node XSS or attribute injection in the input value attribute.",
+  "secure_behavior": "The secure app lets Jinja escape the value by default, preventing the input from being interpreted as HTML or attributes.",
+  "evidence_note": "Inspect the rendered HTML response and compare how the query is reflected in both apps.",
+  "root_cause": "The vulnerable template marks user-controlled search input as safe before rendering it into HTML.",
+  "impact": "Unsafe reflection may allow attacker-controlled HTML or script execution in a user's browser in a real deployment.",
+  "remediation": "Do not mark user input as safe. Keep autoescaping enabled and apply context-aware output encoding.",
+  "retest_notes": "Retest confirmed that the secure app escapes the same input instead of rendering it as HTML."
+}

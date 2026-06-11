@@ -1,6 +1,8 @@
 services:
   vulnerable-app:
-    build: ./vulnerable-app
+    build:
+      context: .
+      dockerfile: vulnerable-app/Dockerfile
     container_name: vulnshop-vulnerable
     env_file:
       - .env
@@ -9,7 +11,9 @@ services:
     restart: unless-stopped
 
   secure-app:
-    build: ./secure-app
+    build:
+      context: .
+      dockerfile: secure-app/Dockerfile
     container_name: vulnshop-secure
     env_file:
       - .env

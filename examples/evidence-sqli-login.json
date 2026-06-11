@@ -1,0 +1,17 @@
+{
+  "title": "SQL Injection in Login",
+  "vulnerability_id": "VULN-01",
+  "severity": "High",
+  "endpoint": "/login",
+  "test_account": "unauthenticated user",
+  "vulnerable_url": "http://localhost:5000/login",
+  "secure_url": "http://localhost:5001/login",
+  "status_code": "5000: 302 redirect after bypass, 5001: 200 login page with invalid credentials",
+  "vulnerable_behavior": "The vulnerable app builds a SQL query using raw user-controlled username and password input, allowing authentication logic to be bypassed in the local lab.",
+  "secure_behavior": "The secure app uses a parameterized query and password hash verification, so the same input is rejected.",
+  "evidence_note": "Compare the login behavior using a controlled SQL injection test string in the local lab only.",
+  "root_cause": "The vulnerable implementation concatenates user input directly into a SQL query string.",
+  "impact": "An attacker could bypass authentication or access another account if this pattern existed in a real application.",
+  "remediation": "Use parameterized queries for database access and verify passwords with a secure password hashing function.",
+  "retest_notes": "Retest confirmed that the secure app rejects the same input and keeps the user unauthenticated."
+}
