@@ -52,8 +52,8 @@ Run Lab → Explore → Challenge → Collect Evidence → Compare Fix → Gener
 | VULN-04 | Stored XSS | Unsafe stored user content rendering |
 | VULN-05 | Weak Password Storage | Insecure credential handling |
 | VULN-06 | IDOR in Profile Page | Missing object-level authorization |
-| VULN-07 | Thiếu kiểm tra quyền Admin | Broken access control |
-| VULN-08 | Thiếu CSRF Protection | Thiếu xác thực ý định request |
+| VULN-07 | Missing Admin Authorization | Broken access control |
+| VULN-08 | Missing CSRF Protection | Missing request intent verification |
 
 > These vulnerabilities are intentionally implemented for local educational use only. Do not deploy the vulnerable app to the public Internet.
 
@@ -216,53 +216,53 @@ Do not use this project to attack systems you do not own or do not have permissi
 
 ## Dự án này làm gì?
 
-**VulnShop-Lab** là một nền tảng học bảo mật web chạy bằng Docker, được thiết kế cho người mới học. Project cung cấp hai phiên bản của cùng một web app bán hàng mini:
+**VulnShop-Lab** là một nền tảng học bảo mật web chạy bằng Docker, được thiết kế cho người mới bắt đầu. Dự án cung cấp hai phiên bản của cùng một ứng dụng web bán hàng mini:
 
 | Ứng dụng | URL | Mục đích |
 |---|---|---|
-| Vulnerable App | `http://localhost:5000/guide` | Bản cố tình có lỗ hổng để thực hành local an toàn |
-| Secure App | `http://localhost:5001/guide` | Bản đã sửa lỗi để so sánh secure coding |
+| Ứng dụng có lỗ hổng | `http://localhost:5000/guide` | Bản cố tình có lỗi bảo mật để thực hành an toàn trên máy cá nhân |
+| Ứng dụng đã bảo vệ | `http://localhost:5001/guide` | Bản đã khắc phục lỗi để so sánh cách lập trình an toàn |
 
-Workflow học tập:
+Quy trình học tập:
 
 ```text
-Run Lab → Explore → Challenge → Collect Evidence → Compare Fix → Generate Report
+Chạy lab → Khám phá → Làm thử thách → Ghi bằng chứng → So sánh bản sửa lỗi → Sinh báo cáo
 ```
 
 ## Tính năng chính
 
-- Docker Compose chạy hai app song song.
-- Dùng chung templates và static assets để giảm duplicate code.
-- Guided Challenge Mode cho người mới.
-- Evidence Checklist để ghi nhận bằng chứng theo kiểu pentest.
-- Code Comparison để so sánh implementation sai và implementation đã fix.
-- Report Generator sinh báo cáo Markdown từ evidence JSON và có validate field bắt buộc.
-- Challenge Scoreboard lưu tiến độ học trong session.
-- Docker Compose có network isolation cho hai service.
-- Nhiều evidence JSON mẫu cho các nhóm lỗ hổng khác nhau.
-- Behavioral tests cho admin access control, SQL injection, XSS reflection, CSRF protection, scoreboard, Docker Compose network isolation và report generator.
-- Tài liệu song ngữ tiếng Việt và tiếng Anh.
+- Chạy hai ứng dụng song song bằng Docker Compose.
+- Dùng chung giao diện và tài nguyên tĩnh để giảm lặp mã nguồn.
+- Có chế độ bài thực hành có hướng dẫn cho người mới.
+- Có checklist ghi bằng chứng theo phong cách báo cáo pentest.
+- Có tài liệu so sánh giữa cách viết mã không an toàn và cách viết mã đã khắc phục.
+- Có công cụ sinh báo cáo Markdown từ evidence JSON và kiểm tra các trường bắt buộc.
+- Có bảng điểm theo phiên làm việc để người học tự theo dõi tiến độ.
+- Có tách biệt mạng trong Docker Compose cho hai dịch vụ.
+- Có nhiều file evidence JSON mẫu cho các nhóm lỗ hổng khác nhau.
+- Có kiểm thử hành vi cho kiểm soát quyền admin, SQL Injection, XSS phản hồi, CSRF, bảng điểm, tách biệt mạng trong Docker Compose và công cụ sinh báo cáo.
+- Có tài liệu song ngữ tiếng Việt và tiếng Anh.
 
 ## Lỗ hổng được mô phỏng
 
 | ID | Lỗ hổng | Ý nghĩa học tập |
 |---|---|---|
-| VULN-01 | SQL Injection ở Login | Truy vấn SQL không an toàn |
-| VULN-02 | SQL Injection ở Search | Xử lý input không an toàn |
-| VULN-03 | Reflected XSS / Attribute Injection | Render output sai theo context HTML |
-| VULN-04 | Stored XSS | Lưu và hiển thị nội dung user nhập không an toàn |
-| VULN-05 | Weak Password Storage | Lưu trữ mật khẩu yếu |
-| VULN-06 | IDOR ở Profile Page | Thiếu kiểm tra quyền truy cập object |
-| VULN-07 | Thiếu kiểm tra quyền Admin | Broken access control |
-| VULN-08 | Thiếu CSRF Protection | Thiếu xác thực ý định request |
+| VULN-01 | Chèn lệnh SQL ở đăng nhập | Tạo truy vấn SQL không an toàn |
+| VULN-02 | Chèn lệnh SQL ở tìm kiếm | Xử lý dữ liệu đầu vào không an toàn |
+| VULN-03 | XSS phản hồi / chèn thuộc tính HTML | Hiển thị dữ liệu đầu ra sai theo ngữ cảnh HTML |
+| VULN-04 | XSS lưu trữ | Lưu và hiển thị nội dung người dùng nhập không an toàn |
+| VULN-05 | Lưu trữ mật khẩu yếu | Lưu trữ và xử lý thông tin đăng nhập không an toàn |
+| VULN-06 | Truy cập đối tượng trực tiếp không an toàn ở trang hồ sơ | Thiếu kiểm tra quyền truy cập theo từng đối tượng |
+| VULN-07 | Thiếu kiểm tra quyền admin | Thiếu kiểm soát truy cập theo vai trò |
+| VULN-08 | Thiếu bảo vệ CSRF | Thiếu xác thực ý định của request |
 
-> Các lỗi này được tạo có chủ đích để học trong local lab. Không deploy vulnerable app ra Internet.
+> Các lỗi này được tạo có chủ đích để học trong lab cục bộ. Không triển khai ứng dụng có lỗ hổng lên Internet công khai.
 
 ## Yêu cầu
 
 - Docker Desktop
 - Git
-- Python 3.10+ nếu muốn chạy tests hoặc report generator ngoài Docker
+- Python 3.10+ nếu muốn chạy kiểm thử hoặc công cụ sinh báo cáo bên ngoài Docker
 
 ## Cài đặt nhanh
 
@@ -294,32 +294,32 @@ docker compose up --build
 Mở trình duyệt:
 
 ```text
-Vulnerable App: http://localhost:5000/guide
-Secure App:     http://localhost:5001/guide
+Ứng dụng có lỗ hổng: http://localhost:5000/guide
+Ứng dụng đã bảo vệ:  http://localhost:5001/guide
 ```
 
 ## Tài khoản demo
 
-| Role | Username | Password |
+| Vai trò | Tên đăng nhập | Mật khẩu |
 |---|---|---|
-| Admin | `admin` | `admin123` |
-| User | `alice` | `alice123` |
-| User | `bob` | `bob123` |
+| Quản trị viên | `admin` | `admin123` |
+| Người dùng | `alice` | `alice123` |
+| Người dùng | `bob` | `bob123` |
 
-Các tài khoản này được tạo đơn giản vì project chỉ dùng trong local lab.
+Các tài khoản này được tạo đơn giản vì dự án chỉ dùng trong lab cục bộ.
 
 ## Cách học khuyến nghị
 
-1. Mở vulnerable app tại `http://localhost:5000/guide`.
+1. Mở ứng dụng có lỗ hổng tại `http://localhost:5000/guide`.
 2. Đọc `docs/vi/challenges.md`.
-3. Thực hiện từng challenge trên port `5000`.
-4. Ghi evidence theo `docs/vi/evidence-checklist.md`.
-5. Mở secure app tại `http://localhost:5001/guide`.
+3. Thực hiện từng bài thực hành trên cổng `5000`.
+4. Ghi bằng chứng theo `docs/vi/evidence-checklist.md`.
+5. Mở ứng dụng đã bảo vệ tại `http://localhost:5001/guide`.
 6. Thử lại cùng thao tác để so sánh hành vi.
 7. Đọc `docs/vi/code-comparison.md` để hiểu nguyên nhân và cách sửa.
-8. Sinh báo cáo Markdown từ evidence JSON.
+8. Sinh báo cáo Markdown từ file evidence JSON.
 
-## Report Generator
+## Công cụ sinh báo cáo
 
 Sinh report mẫu:
 
@@ -327,7 +327,7 @@ Sinh report mẫu:
 python report-generator/generate_report.py examples/evidence-admin-auth.json --output reports/generated-admin-auth-report.md
 ```
 
-Các evidence JSON mẫu khác:
+Các file evidence JSON mẫu khác:
 
 ```text
 examples/evidence-sqli-login.json
@@ -336,7 +336,7 @@ examples/evidence-idor-profile.json
 examples/evidence-csrf-settings.json
 ```
 
-Report generator sẽ kiểm tra các field bắt buộc trước khi tạo file Markdown.
+Công cụ sinh báo cáo sẽ kiểm tra các trường bắt buộc trước khi tạo file Markdown.
 
 ## Lệnh thường dùng
 
@@ -358,28 +358,28 @@ Tắt lab:
 docker compose down
 ```
 
-Chạy tests:
+Chạy kiểm thử:
 
 ```bash
 python -m pytest tests/
 ```
 
-## Cấu trúc project
+## Cấu trúc dự án
 
 ```text
 VulnShop-Lab/
-├── vulnerable-app/          # Web app có lỗi cố ý
-├── secure-app/              # Web app đã sửa lỗi
-├── common/                  # Templates và static assets dùng chung
+├── vulnerable-app/          # Ứng dụng cố tình có lỗi bảo mật
+├── secure-app/              # Ứng dụng đã khắc phục lỗi
+├── common/                  # Giao diện và tài nguyên tĩnh dùng chung
 ├── docs/
 │   ├── en/                  # Tài liệu tiếng Anh
 │   └── vi/                  # Tài liệu tiếng Việt
-├── examples/                # Evidence JSON mẫu
-├── report-generator/        # Tool sinh report Markdown
-├── reports/                 # Report mẫu / generated report
-├── tests/                   # Behavioral tests
-├── assets/                  # Workflow diagrams
-├── .github/workflows/       # GitHub Actions CI
+├── examples/                # File evidence JSON mẫu
+├── report-generator/        # Công cụ sinh báo cáo Markdown
+├── reports/                 # Báo cáo mẫu / báo cáo được tạo ra
+├── tests/                   # Kiểm thử hành vi
+├── assets/                  # Sơ đồ quy trình
+├── .github/workflows/       # Quy trình CI của GitHub Actions
 ├── docker-compose.yml
 ├── .env.example
 ├── Makefile
@@ -394,20 +394,20 @@ VulnShop-Lab/
 | File | Mục đích |
 |---|---|
 | `docs/vi/learning-path.md` | Lộ trình học đề xuất |
-| `docs/vi/challenges.md` | Challenge thực hành có hướng dẫn |
-| `docs/vi/evidence-checklist.md` | Checklist ghi nhận evidence |
-| `docs/vi/code-comparison.md` | So sánh code vulnerable và secure |
+| `docs/vi/challenges.md` | Bài thực hành có hướng dẫn |
+| `docs/vi/evidence-checklist.md` | Checklist ghi nhận bằng chứng |
+| `docs/vi/code-comparison.md` | So sánh mã nguồn có lỗi và mã nguồn đã sửa |
 | `docs/vi/vulnerability-list.md` | Danh sách lỗ hổng |
 | `docs/vi/remediation-guide.md` | Hướng dẫn khắc phục |
 | `docs/release-notes.md` | Ghi chú phiên bản |
 
 ## Sử dụng có đạo đức
 
-Project này chỉ dành cho học tập trong môi trường local hoặc môi trường được cấp quyền.
+Dự án này chỉ dành cho học tập trong môi trường cục bộ hoặc môi trường được cấp quyền.
 
-Không deploy vulnerable app ra Internet.
+Không triển khai ứng dụng có lỗ hổng lên Internet công khai.
 
-Không sử dụng project để tấn công hệ thống thật hoặc hệ thống không thuộc quyền kiểm thử của bạn.
+Không sử dụng dự án để tấn công hệ thống thật hoặc hệ thống không thuộc quyền kiểm thử của bạn.
 
 ---
 
